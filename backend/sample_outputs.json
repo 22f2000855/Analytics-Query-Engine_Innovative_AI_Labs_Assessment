@@ -1,0 +1,376 @@
+[
+  {
+    "query": "Total sales in India for March",
+    "generated_logic": "SELECT SUM(quantity * unit_price * (1 - discount)) AS total_sales FROM sales_data WHERE country = 'India' AND TO_CHAR(order_date, 'YYYY-MM') = '2024-03'",
+    "result": [
+      {
+        "total_sales": 108.0
+      }
+    ],
+    "confidence_score": 1.0,
+    "explanation": "Understood: Calculate the total sales (revenue) generated in India during March 2024. How generated: Calculated revenue using 'quantity * unit_price * (1 - discount)' filtered by country = 'India' and order_date in March 2024 ('2024-03'). Assumptions made: Assumed 'March' refers to March 2024 based on the dataset reference date.. Execution: returned 1 row(s) in 360ms.",
+    "meta": {
+      "model": "gemini-3.6-flash",
+      "understood": "Calculate the total sales (revenue) generated in India during March 2024.",
+      "assumptions": [
+        "Assumed 'March' refers to March 2024 based on the dataset reference date."
+      ],
+      "repair_count": 0,
+      "used_self_repair": false,
+      "execution": {
+        "success": true,
+        "row_count": 1,
+        "truncated": false,
+        "duration_ms": 359.8812000127509,
+        "error": null
+      },
+      "confidence_breakdown": {
+        "llm_confidence": 1.0,
+        "repair_count": 0,
+        "repair_penalty": 1.0,
+        "empty_result_penalty_applied": false,
+        "unresolved_entities": 0,
+        "unresolved_entity_penalty_applied": false,
+        "final_score": 1.0
+      }
+    }
+  },
+  {
+    "query": "Top 2 cities by profit",
+    "generated_logic": "SELECT city, SUM(profit) AS total_profit FROM sales_data GROUP BY city ORDER BY total_profit DESC LIMIT 2",
+    "result": [
+      {
+        "city": "New York",
+        "total_profit": 200.0
+      },
+      {
+        "city": "San Francisco",
+        "total_profit": 180.0
+      }
+    ],
+    "confidence_score": 1.0,
+    "explanation": "Understood: Find the top 2 cities based on total profit. How generated: Aggregated the stored 'profit' column by 'city' from 'sales_data', ordered the totals in descending order, and applied a LIMIT of 2 to retrieve the top performing cities. Execution: returned 2 row(s) in 1191ms.",
+    "meta": {
+      "model": "gemini-3.6-flash",
+      "understood": "Find the top 2 cities based on total profit.",
+      "assumptions": [],
+      "repair_count": 0,
+      "used_self_repair": false,
+      "execution": {
+        "success": true,
+        "row_count": 2,
+        "truncated": false,
+        "duration_ms": 1190.6434000702575,
+        "error": null
+      },
+      "confidence_breakdown": {
+        "llm_confidence": 1.0,
+        "repair_count": 0,
+        "repair_penalty": 1.0,
+        "empty_result_penalty_applied": false,
+        "unresolved_entities": 0,
+        "unresolved_entity_penalty_applied": false,
+        "final_score": 1.0
+      }
+    }
+  },
+  {
+    "query": "Average order value by region",
+    "generated_logic": "SELECT region, SUM(quantity * unit_price * (1 - discount)) / COUNT(order_id) AS avg_order_value FROM sales_data GROUP BY region",
+    "result": [
+      {
+        "region": "APAC",
+        "avg_order_value": 118.5
+      },
+      {
+        "region": "EMEA",
+        "avg_order_value": 799.3333333333334
+      },
+      {
+        "region": "NA",
+        "avg_order_value": 1087.4666666666667
+      }
+    ],
+    "confidence_score": 1.0,
+    "explanation": "Understood: Calculate the average order value for each region across all available data. How generated: Calculated average order value as total revenue (quantity * unit_price * (1 - discount)) divided by total order count (COUNT(order_id)), grouped by region. Execution: returned 3 row(s) in 327ms.",
+    "meta": {
+      "model": "gemini-3.6-flash",
+      "understood": "Calculate the average order value for each region across all available data.",
+      "assumptions": [],
+      "repair_count": 0,
+      "used_self_repair": false,
+      "execution": {
+        "success": true,
+        "row_count": 3,
+        "truncated": false,
+        "duration_ms": 327.2873000241816,
+        "error": null
+      },
+      "confidence_breakdown": {
+        "llm_confidence": 1.0,
+        "repair_count": 0,
+        "repair_penalty": 1.0,
+        "empty_result_penalty_applied": false,
+        "unresolved_entities": 0,
+        "unresolved_entity_penalty_applied": false,
+        "final_score": 1.0
+      }
+    }
+  },
+  {
+    "query": "Which region missed its target in Feb?",
+    "generated_logic": "SELECT s.region, SUM(s.quantity * s.unit_price * (1 - s.discount)) AS revenue, t.target_revenue FROM sales_data s JOIN targets t ON s.region = t.region AND TO_CHAR(s.order_date, 'YYYY-MM') = t.month WHERE t.month = '2024-02' GROUP BY s.region, t.target_revenue HAVING revenue < t.target_revenue",
+    "result": [
+      {
+        "region": "APAC",
+        "revenue": 75.0,
+        "target_revenue": 6000.0
+      },
+      {
+        "region": "EMEA",
+        "revenue": 255.0,
+        "target_revenue": 7500.0
+      },
+      {
+        "region": "NA",
+        "revenue": 1116.0,
+        "target_revenue": 9500.0
+      }
+    ],
+    "confidence_score": 0.8,
+    "explanation": "Understood: Identify the regions that generated less revenue than their target revenue in February 2024. How generated: Joined sales_data with targets on region and month (2024-02), calculated actual revenue using quantity * unit_price * (1 - discount), grouped by region and target_revenue, and filtered for regions where total revenue was strictly less than target_revenue. Assumptions made: 'Feb' refers to February 2024 based on the dataset's date range.. Execution: returned 3 row(s) in 311ms. Confidence was reduced because the query filters on a value that doesn't appear in the loaded dataset.",
+    "meta": {
+      "model": "gemini-3.6-flash",
+      "understood": "Identify the regions that generated less revenue than their target revenue in February 2024.",
+      "assumptions": [
+        "'Feb' refers to February 2024 based on the dataset's date range."
+      ],
+      "repair_count": 0,
+      "used_self_repair": false,
+      "execution": {
+        "success": true,
+        "row_count": 3,
+        "truncated": false,
+        "duration_ms": 311.31519994232804,
+        "error": null
+      },
+      "confidence_breakdown": {
+        "llm_confidence": 1.0,
+        "repair_count": 0,
+        "repair_penalty": 1.0,
+        "empty_result_penalty_applied": false,
+        "unresolved_entities": 1,
+        "unresolved_entity_penalty_applied": true,
+        "final_score": 0.8
+      }
+    }
+  },
+  {
+    "query": "Sales contribution % by category",
+    "generated_logic": "SELECT product_category, SUM(quantity * unit_price * (1 - discount)) * 100.0 / (SELECT SUM(quantity * unit_price * (1 - discount)) FROM sales_data) AS contribution_pct FROM sales_data GROUP BY product_category",
+    "result": [
+      {
+        "product_category": "Furniture",
+        "contribution_pct": 9.438575899843507
+      },
+      {
+        "product_category": "Technology",
+        "contribution_pct": 88.06077203964529
+      },
+      {
+        "product_category": "Office Supplies",
+        "contribution_pct": 2.5006520605112157
+      }
+    ],
+    "confidence_score": 1.0,
+    "explanation": "Understood: Calculate the percentage contribution of each product category to total sales revenue. How generated: Calculates sales revenue per category using quantity * unit_price * (1 - discount) and divides by total overall revenue obtained via a scalar subquery, multiplied by 100 to get the contribution percentage. Execution: returned 3 row(s) in 804ms.",
+    "meta": {
+      "model": "gemini-3.6-flash",
+      "understood": "Calculate the percentage contribution of each product category to total sales revenue.",
+      "assumptions": [],
+      "repair_count": 0,
+      "used_self_repair": false,
+      "execution": {
+        "success": true,
+        "row_count": 3,
+        "truncated": false,
+        "duration_ms": 803.517899941653,
+        "error": null
+      },
+      "confidence_breakdown": {
+        "llm_confidence": 1.0,
+        "repair_count": 0,
+        "repair_penalty": 1.0,
+        "empty_result_penalty_applied": false,
+        "unresolved_entities": 0,
+        "unresolved_entity_penalty_applied": false,
+        "final_score": 1.0
+      }
+    }
+  },
+  {
+    "query": "Top product in each region",
+    "generated_logic": "SELECT region, product_name, SUM(quantity * unit_price * (1 - discount)) AS revenue FROM sales_data GROUP BY region, product_name QUALIFY RANK() OVER (PARTITION BY region ORDER BY SUM(quantity * unit_price * (1 - discount)) DESC) = 1",
+    "result": [
+      {
+        "region": "APAC",
+        "product_name": "Ergo Chair",
+        "revenue": 324.0
+      },
+      {
+        "region": "EMEA",
+        "product_name": "Samsung Galaxy",
+        "revenue": 1288.0
+      },
+      {
+        "region": "NA",
+        "product_name": "Dell XPS",
+        "revenue": 2068.0
+      }
+    ],
+    "confidence_score": 1.0,
+    "explanation": "Understood: Find the top product by total revenue in each region. How generated: Grouped sales_data by region and product_name, computed total revenue as quantity * unit_price * (1 - discount), and used Snowflake's QUALIFY clause with RANK() to filter for the top product per region. Assumptions made: 'Top product' refers to the product generating the highest total revenue.. Execution: returned 3 row(s) in 300ms.",
+    "meta": {
+      "model": "gemini-3.6-flash",
+      "understood": "Find the top product by total revenue in each region.",
+      "assumptions": [
+        "'Top product' refers to the product generating the highest total revenue."
+      ],
+      "repair_count": 0,
+      "used_self_repair": false,
+      "execution": {
+        "success": true,
+        "row_count": 3,
+        "truncated": false,
+        "duration_ms": 299.7493000002578,
+        "error": null
+      },
+      "confidence_breakdown": {
+        "llm_confidence": 1.0,
+        "repair_count": 0,
+        "repair_penalty": 1.0,
+        "empty_result_penalty_applied": false,
+        "unresolved_entities": 0,
+        "unresolved_entity_penalty_applied": false,
+        "final_score": 1.0
+      }
+    }
+  },
+  {
+    "query": "YoY growth in revenue",
+    "generated_logic": "SELECT TO_CHAR(order_date, 'YYYY') AS year, SUM(quantity * unit_price * (1 - discount)) AS revenue FROM sales_data GROUP BY year;",
+    "result": [
+      {
+        "year": "2024",
+        "revenue": 6134.4
+      }
+    ],
+    "confidence_score": 0.5,
+    "explanation": "Understood: Calculate the year-over-year growth in revenue. The dataset only contains data from 2024-01 through 2024-03, so prior year (2023) data is missing to calculate a percentage growth rate.\nHow generated: Extracted the year from order_date using TO_CHAR and calculated total revenue per year. Because historical data for prior years is required to compute year-over-year percentage growth, revenue is grouped by year.",
+    "meta": {
+      "model": "gemini-3.6-flash",
+      "understood": "Calculate the year-over-year growth in revenue.",
+      "assumptions": [
+        "The dataset only contains data from 2024-01 through 2024-03, so prior year (2023) data is missing to calculate a percentage growth rate."
+      ],
+      "repair_count": 0,
+      "used_self_repair": false,
+      "execution": {
+        "success": true,
+        "row_count": 1,
+        "truncated": false,
+        "duration_ms": 311.4523000549525,
+        "error": null
+      },
+      "confidence_breakdown": {
+        "llm_confidence": 0.5,
+        "repair_count": 0,
+        "repair_penalty": 1.0,
+        "empty_result_penalty_applied": false,
+        "unresolved_entities": 0,
+        "unresolved_entity_penalty_applied": false,
+        "final_score": 0.5
+      }
+    }
+  },
+  {
+    "query": "Revenue of top 3 customers per region",
+    "generated_logic": "SELECT region, SUM(revenue) AS top3_revenue FROM (SELECT region, customer_id, SUM(quantity * unit_price * (1 - discount)) AS revenue FROM sales_data GROUP BY region, customer_id QUALIFY RANK() OVER (PARTITION BY region ORDER BY SUM(quantity * unit_price * (1 - discount)) DESC) <= 3) GROUP BY region;",
+    "result": [
+      {
+        "region": "APAC",
+        "top3_revenue": 474.0
+      },
+      {
+        "region": "EMEA",
+        "top3_revenue": 2398.0
+      },
+      {
+        "region": "NA",
+        "top3_revenue": 3262.4
+      }
+    ],
+    "confidence_score": 1.0,
+    "explanation": "Understood: Calculate the combined revenue from the top 3 customers in each region based on total customer revenue.\nHow generated: A subquery aggregates revenue by region and customer_id, filtering for the top 3 customers per region using RANK() and QUALIFY. The outer query then sums the revenue of these top 3 customers for each region.",
+    "meta": {
+      "model": "gemini-3.6-flash",
+      "understood": "Calculate the combined revenue from the top 3 customers in each region based on total customer revenue.",
+      "assumptions": [],
+      "repair_count": 0,
+      "used_self_repair": false,
+      "execution": {
+        "success": true,
+        "row_count": 3,
+        "truncated": false,
+        "duration_ms": 255.34649996552616,
+        "error": null
+      },
+      "confidence_breakdown": {
+        "llm_confidence": 1.0,
+        "repair_count": 0,
+        "repair_penalty": 1.0,
+        "empty_result_penalty_applied": false,
+        "unresolved_entities": 0,
+        "unresolved_entity_penalty_applied": false,
+        "final_score": 1.0
+      }
+    }
+  },
+  {
+    "query": "What is the highest sale in the world and in India?",
+    "generated_logic": "SELECT MAX(quantity * unit_price * (1 - discount)) AS highest_sale_world, MAX(CASE WHEN country = 'India' THEN quantity * unit_price * (1 - discount) END) AS highest_sale_india FROM sales_data",
+    "result": [
+      {
+        "highest_sale_world": 2068.0,
+        "highest_sale_india": 216.0
+      }
+    ],
+    "confidence_score": 0.9,
+    "explanation": "Understood: Calculate the maximum single line-item sale amount (revenue) globally and specifically for India. Interpreted 'highest sale' as the maximum revenue from an individual line item.\nHow generated: Uses MAX on the computed revenue metric (quantity * unit_price * (1 - discount)) overall to find the global highest sale, and conditional aggregation with CASE WHEN country = 'India' to find the highest sale in India.",
+    "meta": {
+      "model": "gemini-3.6-flash",
+      "understood": "Calculate the maximum single line-item sale amount (revenue) globally and specifically for India.",
+      "assumptions": [
+        "Interpreted 'highest sale' as the maximum revenue from an individual line item."
+      ],
+      "repair_count": 0,
+      "used_self_repair": false,
+      "execution": {
+        "success": true,
+        "row_count": 1,
+        "truncated": false,
+        "duration_ms": 571.0153999971226,
+        "error": null
+      },
+      "confidence_breakdown": {
+        "llm_confidence": 0.9,
+        "repair_count": 0,
+        "repair_penalty": 1.0,
+        "empty_result_penalty_applied": false,
+        "unresolved_entities": 0,
+        "unresolved_entity_penalty_applied": false,
+        "final_score": 0.9
+      }
+    }
+  }
+]

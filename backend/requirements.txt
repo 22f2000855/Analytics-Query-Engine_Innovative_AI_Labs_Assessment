@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+pydantic
+pydantic-settings
+pandas
+sqlalchemy
+sqlglot
+google-genai
+python-dotenv
+snowflake-connector-python
+snowflake-sqlalchemy

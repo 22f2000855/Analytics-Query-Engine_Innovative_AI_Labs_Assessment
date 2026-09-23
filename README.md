@@ -4,6 +4,27 @@ Converts natural-language questions about a sales dataset into executable SQL, r
 
 Stack: **React (Vite)** frontend, **FastAPI** backend, **Google Gemini** for NL→SQL generation, **Snowflake** as the query engine.
 
+## Tech Stack
+
+**Backend** (Python, `backend/requirements.txt`)
+- **FastAPI** + **Uvicorn** — HTTP API server
+- **google-genai** — Gemini SDK (structured JSON output via `response_schema`)
+- **SQLAlchemy** + **snowflake-sqlalchemy** + **snowflake-connector-python** — Snowflake connection/execution
+- **sqlglot** — SQL AST parsing for the validator (Snowflake dialect)
+- **pandas** — used only in the batch-test oracle script and CSV loading for `setup_snowflake.py`
+- **pydantic** + **pydantic-settings** — request/response schemas and `.env`-driven config
+- **python-dotenv** — loads `backend/.env`
+
+**Frontend** (JavaScript, `frontend/package.json`)
+- **React 18**
+- **Vite** — dev server and build tool
+- **@vitejs/plugin-react** — Vite's React plugin (JSX/Fast Refresh)
+- Plain `fetch` for API calls — no additional HTTP or state-management library
+
+**Data warehouse**: **Snowflake** (dedicated database `ANALYTICS_QUERY_ENGINE`)
+
+**LLM**: **Google Gemini** (`gemini-3.6-flash`)
+
 ## Architecture
 
 ```
